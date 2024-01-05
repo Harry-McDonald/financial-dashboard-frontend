@@ -4,6 +4,7 @@ import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import SavingsIcon from "@mui/icons-material/Savings";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -90,11 +91,11 @@ const Dashboard = () => {
                 >
                     <StatBox
                         title={"$ " + totalCash}
-                        subtitle="Emails Sent"
+                        subtitle="Total Cash"
                         progress="0.75"
                         increase="+14%"
                         icon={
-                            <EmailIcon
+                            <SavingsIcon
                                 sx={{
                                     color: colors.greenAccent[600],
                                     fontSize: "26px",
