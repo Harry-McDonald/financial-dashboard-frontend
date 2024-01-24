@@ -27,6 +27,11 @@ const Dashboard = () => {
     const [cashStats, setCashStats] = useState({}); // This needs to ping the UP API on load
     const [totalCash, setTotalCash] = useState(0); // This needs to ping the UP API on load
     const [totalCrypto, setTotalCrypto] = useState(0);
+    const [financialTotal, setFinancialTotal] = useState(0);
+
+    useEffect(() => {
+        setFinancialTotal(totalCash + totalCrypto);
+    }, [totalCash, totalCrypto]);
 
     useEffect(() => {
         // Function to fetch data
@@ -196,14 +201,14 @@ const Dashboard = () => {
                                 fontWeight="600"
                                 color={colors.grey[100]}
                             >
-                                Revenue Generated
+                                Financial Health
                             </Typography>
                             <Typography
                                 variant="h3"
                                 fontWeight="bold"
                                 color={colors.greenAccent[500]}
                             >
-                                $59,342.32
+                                {"$" + financialTotal}
                             </Typography>
                         </Box>
                         <Box>
