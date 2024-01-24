@@ -5,9 +5,12 @@ import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import SavingsIcon from "@mui/icons-material/Savings";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import EmailIcon from "@mui/icons-material/Email";
+import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
@@ -15,22 +18,24 @@ import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import CryptoBalanceCalculator from "./CryptoBalanceCalculator";
+import { BACKEND_API_URL } from "../../config.js";
 
 const Dashboard = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [cashStats, setCashStats] = useState({}); // This needs to ping the UP API on load
     const [totalCash, setTotalCash] = useState(0); // This needs to ping the UP API on load
+    const [totalCrypto, setTotalCrypto] = useState(0);
 
     useEffect(() => {
         // Function to fetch data
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:3000/fetch-cash-accounts"
+                    BACKEND_API_URL + "fetch-cash-accounts"
                 );
                 setCashStats(response.data);
-                console.log(response.data);
                 // Calculate cash total
                 let cashTotal = 0;
                 response.data.data.forEach((account) => {
@@ -38,7 +43,7 @@ const Dashboard = () => {
                 });
                 setTotalCash(parseFloat(cashTotal.toFixed(2)));
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching cash data:", error);
             }
         };
 
@@ -91,7 +96,7 @@ const Dashboard = () => {
                 >
                     <StatBox
                         title={"$ " + totalCash}
-                        subtitle="Total Cash"
+                        subtitle="Cash"
                         progress="0.75"
                         increase="+14%"
                         icon={
@@ -111,13 +116,14 @@ const Dashboard = () => {
                     alignItems="center"
                     justifyContent="center"
                 >
+                    <CryptoBalanceCalculator setTotalCrypto={setTotalCrypto} />
                     <StatBox
-                        title="431,225"
-                        subtitle="Sales Obtained"
+                        title={"$ " + totalCrypto}
+                        subtitle="Crypto"
                         progress="0.50"
                         increase="+21%"
                         icon={
-                            <PointOfSaleIcon
+                            <CurrencyBitcoinIcon
                                 sx={{
                                     color: colors.greenAccent[600],
                                     fontSize: "26px",
@@ -134,12 +140,12 @@ const Dashboard = () => {
                     justifyContent="center"
                 >
                     <StatBox
-                        title="32,441"
-                        subtitle="New Clients"
+                        title="$ 0"
+                        subtitle="Stocks"
                         progress="0.30"
                         increase="+5%"
                         icon={
-                            <PersonAddIcon
+                            <ShowChartIcon
                                 sx={{
                                     color: colors.greenAccent[600],
                                     fontSize: "26px",
@@ -156,12 +162,12 @@ const Dashboard = () => {
                     justifyContent="center"
                 >
                     <StatBox
-                        title="1,325,134"
-                        subtitle="Traffic Received"
+                        title="$ 1,325,134"
+                        subtitle="Business"
                         progress="0.80"
                         increase="+43%"
                         icon={
-                            <TrafficIcon
+                            <ShoppingCartIcon
                                 sx={{
                                     color: colors.greenAccent[600],
                                     fontSize: "26px",
