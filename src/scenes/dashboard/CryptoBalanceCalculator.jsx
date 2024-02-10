@@ -33,17 +33,12 @@ const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
 
         let dollarValues = {};
         let totalDollarValue = 0;
-        console.log("tokenPrices:", tokenPrices);
-        console.log("balances:", balances);
         //Convert balances to decimals
         Object.keys(balances).forEach((key) => {
             let decimalBalance = convertBigIntToDecimal(balances[key], 18);
 
-            // console.log(decimalBalance);
             let tokenPrice = tokenPrices[key]["aud"];
-            // console.log(tokenPrice);
             let dollarValue = decimalBalance * tokenPrice;
-            console.log("decimal value", decimalBalance);
             totalDollarValue += dollarValue;
             dollarValues[key] = Number(dollarValue.toFixed(2));
         });
@@ -85,8 +80,6 @@ const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
 
                     let rawEthBalance = await web3.eth.getBalance(accounts[0]);
 
-                    // let ethBalance = web3.utils.fromWei(rawEthBalance, "ether");
-
                     for (const [symbol, address] of Object.entries(
                         tokenAddresses
                     )) {
@@ -97,13 +90,9 @@ const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
                         newBalances[symbol] = balance;
                     }
                     newBalances["ethereum"] = rawEthBalance; // Get ethereum total
-                    console.log("Eth Balance", rawEthBalance);
                     setBalances(newBalances);
                 } catch (error) {
                     console.error(error);
-                } finally {
-                    // setLoading(false);
-                    // calculateDollarTotals(balances)
                 }
             };
 
@@ -126,7 +115,6 @@ const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
             Object.keys(balances).forEach((key) => {
                 tokenIDs += key + ",";
             });
-            console.log(tokenIDs);
             try {
                 axios
                     .get(BACKEND_API_URL + "get-token-prices", {

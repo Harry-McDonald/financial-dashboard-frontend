@@ -25,12 +25,14 @@ const Dashboard = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [cashStats, setCashStats] = useState({}); // This needs to ping the UP API on load
-    const [totalCash, setTotalCash] = useState(0); // This needs to ping the UP API on load
+    const [totalCash, setTotalCash] = useState(0);
+    const [totalStocks, setTotalStocks] = useState(0);
+    const [totalBusinessCash, setTotalBusinessCash] = useState(0);
     const [totalCrypto, setTotalCrypto] = useState(0);
     const [financialTotal, setFinancialTotal] = useState(0);
 
     useEffect(() => {
-        setFinancialTotal(totalCash + totalCrypto);
+        setFinancialTotal(parseFloat((totalCash + totalCrypto).toFixed(2)));
     }, [totalCash, totalCrypto]);
 
     useEffect(() => {
@@ -102,8 +104,11 @@ const Dashboard = () => {
                     <StatBox
                         title={"$ " + totalCash}
                         subtitle="Cash"
-                        progress="0.75"
-                        increase="+14%"
+                        progress={totalCash / financialTotal}
+                        increase={
+                            ((totalCash / financialTotal) * 100).toFixed(2) +
+                            "%"
+                        }
                         icon={
                             <SavingsIcon
                                 sx={{
@@ -125,8 +130,11 @@ const Dashboard = () => {
                     <StatBox
                         title={"$ " + totalCrypto}
                         subtitle="Crypto"
-                        progress="0.50"
-                        increase="+21%"
+                        progress={totalCrypto / financialTotal}
+                        increase={
+                            ((totalCrypto / financialTotal) * 100).toFixed(2) +
+                            "%"
+                        }
                         icon={
                             <CurrencyBitcoinIcon
                                 sx={{
@@ -145,10 +153,13 @@ const Dashboard = () => {
                     justifyContent="center"
                 >
                     <StatBox
-                        title="$ 0"
+                        title={"$" + totalStocks}
                         subtitle="Stocks"
-                        progress="0.30"
-                        increase="+5%"
+                        progress={totalStocks / financialTotal}
+                        increase={
+                            ((totalStocks / financialTotal) * 100).toFixed(2) +
+                            "%"
+                        }
                         icon={
                             <ShowChartIcon
                                 sx={{
@@ -167,10 +178,15 @@ const Dashboard = () => {
                     justifyContent="center"
                 >
                     <StatBox
-                        title="$ 1,325,134"
+                        title={"$" + totalBusinessCash}
                         subtitle="Business"
-                        progress="0.80"
-                        increase="+43%"
+                        progress={totalBusinessCash / financialTotal}
+                        increase={
+                            (
+                                (totalBusinessCash / financialTotal) *
+                                100
+                            ).toFixed(2) + "%"
+                        }
                         icon={
                             <ShoppingCartIcon
                                 sx={{
