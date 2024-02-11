@@ -15,13 +15,27 @@ import { mochFincancialRawData } from "../../data/mochFinancialTimeData";
 export const AssetsTimeGraph = ({ financialTotal }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [seriesSelection, setSeriesSelection] = useState([]);
+    const [seriesSelection, setSeriesSelection] = useState({
+        "total assets": true,
+        cash: false,
+        crypto: false,
+        stocks: false,
+        business: false,
+    });
     const [timelineSelection, setTimelineSelection] = useState("1M");
     const [financialLineData, setfinancialLineData] = useState([]);
     const [graphData, setGraphData] = useState([]);
+    let graphSeries = ["total assets", "cash", "crypto", "stocks", "business"];
 
     const handleDropdownChange = (event) => {
         setTimelineSelection(event.target.value);
+    };
+
+    const handleCheckboxChange = (id) => {
+        setSeriesSelection((prevSeriesSelection) => ({
+            ...prevSeriesSelection,
+            [id]: !prevSeriesSelection[id],
+        }));
     };
 
     /**
@@ -59,7 +73,7 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
                 });
                 totalAssetsData.push({
                     x: entry["timestamp"],
-                    y: entry["total_assets"],
+                    y: entry["total assets"],
                 });
             });
 
@@ -93,7 +107,6 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
         }
 
         // Need to implement 1Y and 5Y but this is at least a year from being in scope
-        console.log(lineGraphData);
         return lineGraphData;
     };
 
@@ -130,7 +143,12 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
      * When the series selection changes or the lineData changes because the
      * timeline selection has changed then send the
      */
-    useEffect(() => {}, [seriesSelection, financialLineData]);
+    useEffect(() => {
+        const filteredData = financialLineData.filter(
+            (series) => seriesSelection[series.id]
+        );
+        setGraphData(filteredData);
+    }, [seriesSelection, financialLineData]);
 
     return (
         <>
@@ -165,80 +183,34 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
                 gap="0px"
             >
                 <Box gridColumn="span 11" gridRow="span 3">
-                    <LineChart isDashboard={true} data={financialLineData} />
+                    <LineChart isDashboard={true} data={graphData} />
                 </Box>
                 <Box mt="20px" gridColumn="span 1" gridRow="span 2">
                     <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    defaultChecked
-                                    sx={{
-                                        color: colors.grey[100],
-                                        "&.Mui-checked": {
-                                            color: colors.greenAccent[500],
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Total Assets"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    defaultChecked
-                                    sx={{
-                                        color: colors.grey[100],
-                                        "&.Mui-checked": {
-                                            color: colors.greenAccent[500],
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Cash"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    defaultChecked
-                                    sx={{
-                                        color: colors.grey[100],
-                                        "&.Mui-checked": {
-                                            color: colors.greenAccent[500],
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Crypto"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    defaultChecked
-                                    sx={{
-                                        color: colors.grey[100],
-                                        "&.Mui-checked": {
-                                            color: colors.greenAccent[500],
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Stocks"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    defaultChecked
-                                    sx={{
-                                        color: colors.grey[100],
-                                        "&.Mui-checked": {
-                                            color: colors.greenAccent[500],
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Business"
-                        />
+                        {graphSeries.map((label) => (
+                            <FormControlLabel
+                                key={label}
+                                control={
+                                    <Checkbox
+                                        inputProps={{
+                                            "aria-label": "controlled",
+                                        }}
+                                        key={label}
+                                        checked={seriesSelection[label]}
+                                        onChange={() =>
+                                            handleCheckboxChange(label)
+                                        }
+                                        sx={{
+                                            color: colors.grey[100],
+                                            "&.Mui-checked": {
+                                                color: colors.greenAccent[500],
+                                            },
+                                        }}
+                                    />
+                                }
+                                label={label}
+                            />
+                        ))}
                     </FormGroup>
                 </Box>
                 <Box mr="10px">
