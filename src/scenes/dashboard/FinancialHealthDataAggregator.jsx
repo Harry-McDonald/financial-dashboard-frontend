@@ -1,5 +1,5 @@
 import { mochFincancialRawData } from "../../data/mochFinancialTimeData";
-
+import { useEffect } from "react";
 // Process raw data and format into 1M/3M/6M/1Y/5Y bins for line graph
 // The line graph series data object should have the following structure
 // An array of objects for cash, crypto, stocks and bussiness

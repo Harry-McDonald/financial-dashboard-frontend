@@ -1,7 +1,10 @@
+import { tokens } from "../theme";
+
 export const mochFincancialRawData = [
-    { "timestamp": "10/02/2024", "cash": 2300, "crypto": 3000, "stocks": 0, "business": 0},
-    { "timestamp": "03/02/2024", "cash": 1300, "crypto": 2500, "stocks": 0, "business": 0},
-    { "timestamp": "27/01/2024", "cash": 900, "crypto": 3500, "stocks": 0, "business": 0}
+    { "timestamp": "20/01/2024", "cash": 900, "crypto": 3500, "stocks": 0, "business": 0, "total_assets": 4400},
+    { "timestamp": "27/01/2024", "cash": 900, "crypto": 3500, "stocks": 0, "business": 0, "total_assets": 4400},
+    { "timestamp": "03/02/2024", "cash": 1300, "crypto": 2500, "stocks": 0, "business": 0, "total_assets": 3800},
+    { "timestamp": "10/02/2024", "cash": 2300, "crypto": 3000, "stocks": 100, "business": 2000, "total_assets": 5300},
 ];
 
 export const mochFinancial1YLineData = [
