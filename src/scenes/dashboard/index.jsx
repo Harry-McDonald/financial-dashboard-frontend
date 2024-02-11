@@ -6,20 +6,17 @@ import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import SavingsIcon from "@mui/icons-material/Savings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import EmailIcon from "@mui/icons-material/Email";
 import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
-import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
 import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import CryptoBalanceCalculator from "./CryptoBalanceCalculator";
 import { BACKEND_API_URL } from "../../config.js";
+import { pink } from "@mui/material/colors";
+import { AssetsTimeGraph } from "./AssetsTimeGraph.jsx";
 
 const Dashboard = () => {
     const theme = useTheme();
@@ -30,6 +27,7 @@ const Dashboard = () => {
     const [totalBusinessCash, setTotalBusinessCash] = useState(0);
     const [totalCrypto, setTotalCrypto] = useState(0);
     const [financialTotal, setFinancialTotal] = useState(0);
+    const [financialTimeData, setFinancialTimeData] = useState({});
 
     useEffect(() => {
         setFinancialTotal(parseFloat((totalCash + totalCrypto).toFixed(2)));
@@ -200,103 +198,14 @@ const Dashboard = () => {
 
                 {/* ROW 2 */}
                 <Box
-                    gridColumn="span 8"
-                    gridRow="span 2"
+                    gridColumn="span 12"
+                    gridRow="span 3"
                     backgroundColor={colors.primary[400]}
                 >
-                    <Box
-                        mt="25px"
-                        p="0 30px"
-                        display="flex "
-                        justifyContent="space-between"
-                        alignItems="center"
-                    >
-                        <Box>
-                            <Typography
-                                variant="h5"
-                                fontWeight="600"
-                                color={colors.grey[100]}
-                            >
-                                Financial Health
-                            </Typography>
-                            <Typography
-                                variant="h3"
-                                fontWeight="bold"
-                                color={colors.greenAccent[500]}
-                            >
-                                {"$" + financialTotal}
-                            </Typography>
-                        </Box>
-                        <Box>
-                            <IconButton>
-                                <DownloadOutlinedIcon
-                                    sx={{
-                                        fontSize: "26px",
-                                        color: colors.greenAccent[500],
-                                    }}
-                                />
-                            </IconButton>
-                        </Box>
-                    </Box>
-                    <Box height="250px" m="-20px 0 0 0">
-                        <LineChart isDashboard={true} />
-                    </Box>
-                </Box>
-                <Box
-                    gridColumn="span 4"
-                    gridRow="span 2"
-                    backgroundColor={colors.primary[400]}
-                    overflow="auto"
-                >
-                    <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        borderBottom={`4px solid ${colors.primary[500]}`}
-                        colors={colors.grey[100]}
-                        p="15px"
-                    >
-                        <Typography
-                            color={colors.grey[100]}
-                            variant="h5"
-                            fontWeight="600"
-                        >
-                            Recent Transactions
-                        </Typography>
-                    </Box>
-                    {mockTransactions.map((transaction, i) => (
-                        <Box
-                            key={`${transaction.txId}-${i}`}
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            borderBottom={`4px solid ${colors.primary[500]}`}
-                            p="15px"
-                        >
-                            <Box>
-                                <Typography
-                                    color={colors.greenAccent[500]}
-                                    variant="h5"
-                                    fontWeight="600"
-                                >
-                                    {transaction.txId}
-                                </Typography>
-                                <Typography color={colors.grey[100]}>
-                                    {transaction.user}
-                                </Typography>
-                            </Box>
-                            <Box color={colors.grey[100]}>
-                                {transaction.date}
-                            </Box>
-                            <Box
-                                backgroundColor={colors.greenAccent[500]}
-                                p="5px 10px"
-                                borderRadius="4px"
-                            >
-                                ${transaction.cost}
-                            </Box>
-                        </Box>
-                    ))}
+                    <AssetsTimeGraph
+                        financialTotal={financialTotal}
+                        financialTimeData={financialTimeData}
+                    />
                 </Box>
 
                 {/* ROW 3 */}
