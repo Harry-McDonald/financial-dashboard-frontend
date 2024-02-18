@@ -2,12 +2,41 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import { BACKEND_API_URL } from "../../config.js";
+import { TOKEN_BALANCE_TABLENAME } from "../../config.js";
 
 const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
     const [balances, setBalances] = useState({});
     const [loading, setLoading] = useState(true);
     const [tokenPrices, setTokenPrices] = useState({});
     const [tokenDollarValues, setTokenDollarValues] = useState({});
+
+    useEffect(() => {
+        if (Object.keys(balances).length === 0) return;
+        try {
+            axios
+                .post(BACKEND_API_URL + "updateDBItem", {
+                    tableName: TOKEN_BALANCE_TABLENAME,
+                    key: { itemId: "1" },
+                    updateObject: convertBalancesToString(balances),
+                })
+                .then((res) => {
+                    console.log(res);
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    }, [balances]);
+
+    function convertBalancesToString(balances) {
+        let newBalances = {};
+
+        Object.keys(balances).forEach((key) => {
+            newBalances[key] = balances[key].toString();
+        });
+
+        console.log(newBalances);
+        return newBalances;
+    }
 
     function convertBigIntToDecimal(bigIntValue, decimals) {
         // Convert bigIntValue to a string

@@ -216,7 +216,7 @@ const Dashboard = () => {
                     p="30px"
                 >
                     <Typography variant="h5" fontWeight="600">
-                        Campaign
+                        Savings Goal
                     </Typography>
                     <Box
                         display="flex"

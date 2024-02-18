@@ -41,7 +41,7 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
     /**
      * entries =
      * [
-     *  {timestamp: "22/01/2024", cash = 2300, crypto}
+     *  {date: "22/01/2024", cash = 2300, crypto}
      * ]
      */
 
@@ -56,23 +56,23 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
         if (["1M", "3M", "6M"].includes(timelineSelection)) {
             rawEntries.forEach((entry) => {
                 cashData.push({
-                    x: entry["timestamp"],
+                    x: entry["date"],
                     y: entry["cash"],
                 });
                 cryptoData.push({
-                    x: entry["timestamp"],
+                    x: entry["date"],
                     y: entry["crypto"],
                 });
                 stocksData.push({
-                    x: entry["timestamp"],
+                    x: entry["date"],
                     y: entry["stocks"],
                 });
                 businessData.push({
-                    x: entry["timestamp"],
+                    x: entry["date"],
                     y: entry["business"],
                 });
                 totalAssetsData.push({
-                    x: entry["timestamp"],
+                    x: entry["date"],
                     y: entry["total assets"],
                 });
             });
@@ -147,6 +147,7 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
         const filteredData = financialLineData.filter(
             (series) => seriesSelection[series.id]
         );
+        // console.log(filteredData);
         setGraphData(filteredData);
     }, [seriesSelection, financialLineData]);
 
@@ -180,7 +181,7 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
                 display="grid"
                 gridTemplateColumns="repeat(12, 1fr)"
                 gridAutoRows="117px"
-                gap="0px"
+                gap="10px"
             >
                 <Box gridColumn="span 11" gridRow="span 3">
                     <LineChart isDashboard={true} data={graphData} />
