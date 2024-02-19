@@ -34,7 +34,6 @@ const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
             newBalances[key] = balances[key].toString();
         });
 
-        console.log(newBalances);
         return newBalances;
     }
 
