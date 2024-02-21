@@ -1,4 +1,35 @@
-# React Admin Dashboard
+# financial-dashboard-frontend
+
+## Nginx Server Configuration
+
+Configuration file located at: /etc/nginx/sites-available/financial-dashboard
+
+server {
+listen 80;
+server_name 54.206.238.232; # Use server IP or domain name
+
+    # Serve static files
+    location / {
+        root /home/ubuntu/financial-dashboard-frontend/build;
+        index index.html;
+        try_files $uri $uri/ /index.html; # Fallback to index.html for single-page applications
+    }
+
+    # Proxy API requests to backend
+    location /api/ {
+        proxy_pass http://127.0.0.1:5000; # Forward API requests to your app
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+}
+
+## React Admin Dashboard Help
 
 Build a COMPLETE React Admin Dashboard App | React, Material UI, Data Grid, Light & Dark Mode
 
