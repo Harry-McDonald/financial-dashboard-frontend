@@ -1,5 +1,6 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
+import axios from "axios";
 import LineChart from "../../components/LineChart";
 import Checkbox from "@mui/material/Checkbox";
 import FormGroup from "@mui/material/FormGroup";
@@ -9,6 +10,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { BACKEND_API_URL } from "../../config";
+import { FINANCIAL_HISTORICAL_DATA_TABLENAME } from "../../config";
 import { FinancialHealthDataAggregator } from "./FinancialHealthDataAggregator";
 import { mochFincancialRawData } from "../../data/mochFinancialTimeData";
 
@@ -25,7 +28,45 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
     const [timelineSelection, setTimelineSelection] = useState("1M");
     const [financialLineData, setfinancialLineData] = useState([]);
     const [graphData, setGraphData] = useState([]);
+    const [rawData, setRawData] = useState([]);
     let graphSeries = ["total assets", "cash", "crypto", "stocks", "business"];
+
+    useEffect(() => {
+        fetchHistoricalData();
+    }, []); // Empty dependency array ensures this runs once on mount
+
+    useEffect(() => {
+        if (rawData.length !== 0) setfinancialLineData(calculateTimelineData());
+    }, [timelineSelection, rawData]);
+
+    /**
+     * When the series selection changes or the lineData changes because the
+     * timeline selection has changed then send the
+     */
+    useEffect(() => {
+        const filteredData = financialLineData.filter(
+            (series) => seriesSelection[series.id]
+        );
+        // console.log(filteredData);
+        setGraphData(filteredData);
+    }, [seriesSelection, financialLineData]);
+
+    async function fetchHistoricalData() {
+        try {
+            const response = await axios.get(
+                BACKEND_API_URL + "fetchAllItems",
+                {
+                    params: {
+                        tableName: FINANCIAL_HISTORICAL_DATA_TABLENAME,
+                    },
+                }
+            );
+            console.log("historical data: ", response.data);
+            setRawData(response.data.items);
+        } catch (error) {
+            console.error("Error fetching cash data:", error);
+        }
+    }
 
     const handleDropdownChange = (event) => {
         setTimelineSelection(event.target.value);
@@ -111,15 +152,17 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
     };
 
     const calculateTimelineData = () => {
-        let rawData = mochFincancialRawData;
+        // let rawData = await fetchHistoricalData();
         let rawEntries = [];
+        console.log("raw data", rawData);
 
         if (rawData.length === 0) {
-            window.alert(
+            console.log(
                 "Financial history length is 0. Suspected error in fetch."
             );
             return;
         }
+
         if (timelineSelection === "1M") {
             rawEntries = rawData.slice(-4);
         } else if (timelineSelection === "3M") {
@@ -134,22 +177,6 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
 
         return formatLineGraphData(rawEntries, timelineSelection);
     };
-
-    useEffect(() => {
-        setfinancialLineData(calculateTimelineData());
-    }, [timelineSelection]);
-
-    /**
-     * When the series selection changes or the lineData changes because the
-     * timeline selection has changed then send the
-     */
-    useEffect(() => {
-        const filteredData = financialLineData.filter(
-            (series) => seriesSelection[series.id]
-        );
-        // console.log(filteredData);
-        setGraphData(filteredData);
-    }, [seriesSelection, financialLineData]);
 
     return (
         <>

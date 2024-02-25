@@ -17,7 +17,7 @@ server_name 54.206.238.232; # Use server IP or domain name
 
     # Proxy API requests to backend
     location /api/ {
-        proxy_pass http://127.0.0.1:5000; # Forward API requests to your app
+        proxy_pass http://127.0.0.1:5000/; # Forward API requests to your app
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -28,6 +28,17 @@ server_name 54.206.238.232; # Use server IP or domain name
     }
 
 }
+
+### Handy nginx commands
+
+View logs:
+sudo tail -n 20 /var/log/nginx/error.log
+
+Rotate logs:
+sudo logrotate -f /etc/logrotate.d/nginx
+
+Command that fixed my permission error:
+sudo chmod o+x /home /home/ubuntu /home/ubuntu/financial-dashboard-frontend
 
 ## React Admin Dashboard Help
 
