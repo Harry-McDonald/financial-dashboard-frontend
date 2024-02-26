@@ -66,6 +66,34 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
         }
     }
 
+    function groupDataByNPreviousMonths(data, monthsBack) {
+        // Helper function to convert a string date in "DD/MM/YYYY" format to a Date object
+        const parseDate = (dateStr) => {
+            const parts = dateStr.split("/");
+            // Note: months are 0-based in JavaScript Date
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        };
+
+        // Calculate the start date n months back from today
+        const today = new Date();
+        const startOfPeriod = new Date(
+            today.getFullYear(),
+            today.getMonth() - monthsBack,
+            today.getDate()
+        );
+
+        // Filter data within the n months back from today
+        const filteredData = data.filter((item) => {
+            const itemDate = parseDate(item.date);
+            return itemDate >= startOfPeriod && itemDate <= today;
+        });
+
+        // Sort the filtered data in ascending order by date
+        filteredData.sort((a, b) => parseDate(a.date) - parseDate(b.date));
+
+        return filteredData;
+    }
+
     const handleDropdownChange = (event) => {
         setTimelineSelection(event.target.value);
     };
@@ -161,15 +189,15 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
         }
 
         if (timelineSelection === "1M") {
-            rawEntries = rawData.slice(-4);
+            rawEntries = groupDataByNPreviousMonths(rawData, 1);
         } else if (timelineSelection === "3M") {
-            rawEntries = rawData.slice(-12);
+            rawEntries = groupDataByNPreviousMonths(rawData, 3);
         } else if (timelineSelection === "6M") {
-            rawEntries = rawData.slice(-24);
+            rawEntries = groupDataByNPreviousMonths(rawData, 6);
         } else if (timelineSelection === "1Y") {
-            rawEntries = rawData.slice(-48);
+            rawEntries = groupDataByNPreviousMonths(rawData, 12);
         } else if (timelineSelection === "5Y") {
-            rawEntries = rawData.slice(-48 * 5);
+            rawEntries = groupDataByNPreviousMonths(rawData, 60);
         }
 
         return formatLineGraphData(rawEntries, timelineSelection);

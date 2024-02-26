@@ -13,15 +13,11 @@ const CryptoBalanceCalculator = ({ setTotalCrypto }) => {
     useEffect(() => {
         if (Object.keys(balances).length === 0) return;
         try {
-            axios
-                .post(BACKEND_API_URL + "updateDBItem", {
-                    tableName: TOKEN_BALANCE_TABLENAME,
-                    key: { itemId: "1" },
-                    updateObject: convertBalancesToString(balances),
-                })
-                .then((res) => {
-                    console.log(res);
-                });
+            axios.post(BACKEND_API_URL + "updateDBItem", {
+                tableName: TOKEN_BALANCE_TABLENAME,
+                key: { itemId: "1" },
+                updateObject: convertBalancesToString(balances),
+            });
         } catch (error) {
             console.error(error);
         }
