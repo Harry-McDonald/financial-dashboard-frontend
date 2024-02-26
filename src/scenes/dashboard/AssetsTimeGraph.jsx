@@ -47,7 +47,6 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
         const filteredData = financialLineData.filter(
             (series) => seriesSelection[series.id]
         );
-        // console.log(filteredData);
         setGraphData(filteredData);
     }, [seriesSelection, financialLineData]);
 
@@ -61,7 +60,6 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
                     },
                 }
             );
-            console.log("historical data: ", response.data);
             setRawData(response.data.items);
         } catch (error) {
             console.error("Error fetching cash data:", error);
@@ -154,7 +152,6 @@ export const AssetsTimeGraph = ({ financialTotal }) => {
     const calculateTimelineData = () => {
         // let rawData = await fetchHistoricalData();
         let rawEntries = [];
-        console.log("raw data", rawData);
 
         if (rawData.length === 0) {
             console.log(
